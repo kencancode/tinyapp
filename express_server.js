@@ -5,7 +5,7 @@ var PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 
 function generateRandomString() {
-
+  return Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
 }
 
 var urlDatabase = {
@@ -53,3 +53,5 @@ app.post("/urls", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+generateRandomString();
