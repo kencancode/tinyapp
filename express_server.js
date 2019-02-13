@@ -28,32 +28,43 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+
+
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
+});
+
+//    "/urls"          = show all URLs
+app.post("/urls", (req, res) => {
+  var randomURL = generateRandomString();
+  console.log(req.body["longURL"]);
+  urlDatabase[randomURL] = req.body["longURL"]
+  res.redirect("/urls");
 });
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+//     "/urls/313412" = go to an individual info
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    shortURL: req.params.shortURL,
+    shortURL: req.params.shortURL,                  //data will be stored like this, {mock up : what they type}
     longURL: urlDatabase[req.params.shortURL]
   };
   res.render("urls_show", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  var randomURL = generateRandomString();
-  console.log(req.body["longURL"]);
-
-  urlDatabase[randomURL] = req.body["longURL"]
-
-  res.redirect("/urls")
+//delete when buttons are clicked
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL]
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 });
 
+
+//    "/u/b3232"      = go to that website
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL]
   res.redirect(longURL);
