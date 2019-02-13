@@ -12,12 +12,13 @@
 <% include ./partials/_header %>
     <ul>
       <% for(var path in urls){ %>
-        <li><a href='#'><%= urls[path] %></a></li>
-    <% } %>
+        <li><%= path %>: <a href='#'><%= urls[path] %></a>
+        <form method="POST" action="/urls/<%= path %>/delete">
+          <button type="submit" class="btn btn-primary">Delete</button>
+        </li>
+        </form>
+      <% } %>
     </ul>
 
 </body>
 </html>
-
-
-
