@@ -10,11 +10,13 @@
 </head>
 <body style="font-size:20px; padding:50px;">
 <% include ./partials/_header %>
+<br/>
+<h1>My URLs</h1>
     <ul>
       <% for(var path in urls){ %>
         <li><%= path %>: <a href='<%= urls[path] %>'><%= urls[path] %></a>
-        <form method="POST" action="/urls/<%= path %>/delete">
-          <a href='/urls/<%= path %>/'>Edit</a>
+          <form method="POST" action="/urls/<%= path %>/delete">
+          <a href='/urls/<%= path %>/'>Edit     </a>
           <button type="submit" class="btn btn-primary">Delete</button>
         </li>
         </form>
