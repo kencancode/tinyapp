@@ -47,14 +47,21 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-//     "/urls/313412" = go to an individual info
+//     "/urls/313412" = go to each link
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    shortURL: req.params.shortURL,                  //data will be stored like this, {mock up : what they type}
+    shortURL: req.params.shortURL,                  //data will be stored like this, {mock : what clients type}
     longURL: urlDatabase[req.params.shortURL]
   };
   res.render("urls_show", templateVars);
 });
+
+// //     "/urls/313412" = go to each link and can update*******
+app.post("/urls/:shortURL", (req, res) => {
+  urlDatabase[req.params.shortURL] = req.body.longURL;
+  res.redirect('/urls');
+});
+
 
 //delete when buttons are clicked
 app.post("/urls/:shortURL/delete", (req, res) => {
