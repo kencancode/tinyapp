@@ -114,11 +114,15 @@ app.get("/register", (req, res) => {
 
 // POST /register
 app.post("/register", (req, res) => {
+  if(!req.body.email || !req.body.password){
+    res.sendStatus(404);
+  } else {
   var randomUserID = "user" + generateRandomString();
   users[randomUserID] = {id: randomUserID, email: req.body.email, password: req.body.password};
   res.cookie('user_id', users[randomUserID].id);
   console.log(users);
   res.redirect('/urls');
+  }
 });
 
 app.listen(PORT, () => {
