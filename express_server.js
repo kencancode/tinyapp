@@ -20,7 +20,7 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "1"
   },
  "user2RandomID": {
     id: "user2RandomID",
@@ -30,12 +30,12 @@ const users = {
 }
 
 // will return boolean
-function doesEmailExist(email){
-  for(var eachUser in users){
-    if (email === eachUser.email){
-      return true;
+function getUser(email){
+  for(var id in users) {
+    if (email === users[id].email){
+      return users[id];
     } else {
-      return false;
+      return null;        //faulty
     }
   }
 };
@@ -107,18 +107,6 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-//login
-app.post("/login", (req, res) => {
-  res.cookie('user_id', req.body.user_id);
-  res.redirect('/urls');
-});
-
-//logout
-app.post("/logout", (req, res) => {
-  res.clearCookie('user_id');
-  res.redirect('/urls');
-});
-
 //   GET  "/register"
 app.get("/register", (req, res) => {
   res.render("urls_register");
@@ -139,6 +127,29 @@ app.post("/register", (req, res) => {
     res.sendStatus(404);
   }
 });
+
+// login
+app.get("/login", (req, res) => {
+  res.render("urls_login");
+});
+
+//login
+app.post("/login", (req, res) => {
+   var user = getUser(req.body.email);
+   if (user && user.password === req.body.password){
+    res.cookie('user_id', user.id);
+    res.redirect("/urls");
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+//logout
+app.post("/logout", (req, res) => {
+  res.clearCookie('user_id');
+  res.redirect('/urls');
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
