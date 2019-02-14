@@ -4,7 +4,7 @@ var PORT = 8080; // default port 8080
 var cookieParser = require('cookie-parser');
 
 
-app.use(cookieParser());
+app.use(cookieParser('A random phrase in order to create random signed cookies'));
 app.set("view engine", "ejs");
 
 function generateRandomString() {
@@ -15,6 +15,19 @@ var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -35,7 +48,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies["username"] };
-  res.render("urls_index", templateVars);
+  res.render("urls_index", templateVars);         //it means we in urls_index, we pass the templateVars value to be used and rendered
 });
 
 //    "/urls"          = show all URLs
@@ -91,6 +104,20 @@ app.post("/login", (req, res) => {
 //logout
 app.post("/logout", (req, res) => {
   res.clearCookie('username');
+  res.redirect('/urls');
+});
+
+//   GET  "/register"
+app.get("/register", (req, res) => {
+  res.render("urls_register");
+});
+
+// POST /register
+app.post("/register", (req, res) => {
+  var randomUserID = "user" + generateRandomString();
+  users[randomUserID] = {id: randomUserID, email: req.body.email, password: req.body.password};
+  res.cookie('user_id', users[randomUserID].id);
+  console.log(users);
   res.redirect('/urls');
 });
 
