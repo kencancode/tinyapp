@@ -29,7 +29,6 @@ const users = {
   }
 }
 
-// will return boolean
 function getUser(email){
   for(var id in users) {
     if (email === users[id].email){
@@ -71,7 +70,11 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = { user: req.cookies["user_id"], user: users[req.cookies["user_id"]] };
+  if(users[req.cookies["user_id"]]){
   res.render("urls_new", templateVars);
+  } else {
+  res.redirect("/login");
+  }
 });
 
 //     "/urls/313412" = go to each link
@@ -114,7 +117,7 @@ app.get("/register", (req, res) => {
 // POST /register
 app.post("/register", (req, res) => {
   if(!req.body.email || !req.body.password){
-    res.sendStatus(404);
+    res.send("Email and password must be provided");
   };
 
 if (getUser(req.body.email)){
@@ -139,7 +142,7 @@ app.post("/login", (req, res) => {
     res.cookie('user_id', user.id);
     res.redirect("/urls");
   } else {
-    res.sendStatus(403);
+    res.send("Email and password do not match");;
   }
 });
 
