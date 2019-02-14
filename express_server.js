@@ -57,7 +57,11 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user_id: req.cookies["user_id"], user: users[req.cookies["user_id"]] };
-  res.render("urls_index", templateVars);         //it means we in urls_index, we pass the templateVars value to be used and rendered
+  if(users[req.cookies["user_id"]]){
+  res.render("urls_index", templateVars);
+  } else {
+  res.redirect("/login");
+  }
 });
 
 //    "/urls"          = show all URLs
@@ -85,7 +89,11 @@ app.get("/urls/:shortURL", (req, res) => {
     user_id: req.cookies["user_id"],
     user: users[req.cookies["user_id"]]
   };
-  res.render("urls_show", templateVars);
+    if(users[req.cookies["user_id"]]){
+    res.render("urls_show", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 // //     "/urls/313412" = go to each link and can update*******
