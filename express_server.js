@@ -34,10 +34,9 @@ function getUser(email){
   for(var id in users) {
     if (email === users[id].email){
       return users[id];
-    } else {
-      return null;        //faulty
     }
   }
+  return null;
 };
 
 const bodyParser = require("body-parser");
@@ -118,13 +117,13 @@ app.post("/register", (req, res) => {
     res.sendStatus(404);
   };
 
-  if (doesEmailExist(req.body.email) === false){
+if (getUser(req.body.email)){
+    res.send("User exists");
+  } else if (getUser(req.body.email) === null){
     var randomUserID = "user" + generateRandomString();
     users[randomUserID] = {id: randomUserID, email: req.body.email, password: req.body.password};
     res.cookie('user_id', users[randomUserID].id);
     res.redirect('/urls');
-  } else if (doesEmailExist(req.body.email) === true){
-    res.sendStatus(404);
   }
 });
 
