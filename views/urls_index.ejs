@@ -14,7 +14,7 @@
 <h1>My URLs</h1>
     <ul>
       <% for(var path in urls){ %>
-        <li><%= path %>: <a href='<%= urls[path] %>'><%= urls[path] %></a>
+        <li><%= path %>: <a href='<%= urls[path].longURL %>'><%= urls[path].longURL %></a>
           <form method="POST" action="/urls/<%= path %>/delete">
           <a href='/urls/<%= path %>/'>Edit     </a>
           <button type="submit" class="btn btn-primary">Delete</button>

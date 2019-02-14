@@ -12,8 +12,8 @@ function generateRandomString() {
 }
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "aJ48lW"},
+  "9sm5xK": {longURL: "http://www.google.com", userID: "aJ48lW" }
 };
 
 const users = {
@@ -81,7 +81,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     shortURL: req.params.shortURL,                  //data will be stored like this, {mock : what clients type}
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL].longURL,
     user_id: req.cookies["user_id"],
     user: users[req.cookies["user_id"]]
   };
@@ -142,7 +142,7 @@ app.post("/login", (req, res) => {
     res.cookie('user_id', user.id);
     res.redirect("/urls");
   } else {
-    res.send("Email and password do not match");;
+    res.send("Your password is correct or you haven't created an account yet");;
   }
 });
 
