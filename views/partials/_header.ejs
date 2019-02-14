@@ -3,8 +3,8 @@
 <h1>TinyAPP</h1>
 <br/>
 
-<% if(username !== undefined){ %>
-  <h2>Welcome, <%= username %> </h2>
+<% if(user){ %>
+  <h2>Welcome, <%= user.email %> </h2>
 
   <form class="form-inline" action="/logout" method="POST">
     <button type="submit" class="btn btn-primary">Logout</button>
