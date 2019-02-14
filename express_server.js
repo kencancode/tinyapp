@@ -29,6 +29,17 @@ const users = {
   }
 }
 
+// will return boolean
+function doesEmailExist(email){
+  for(var eachUser in users){
+    if (email === eachUser.email){
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -116,12 +127,15 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   if(!req.body.email || !req.body.password){
     res.sendStatus(404);
-  } else {
-  var randomUserID = "user" + generateRandomString();
-  users[randomUserID] = {id: randomUserID, email: req.body.email, password: req.body.password};
-  res.cookie('user_id', users[randomUserID].id);
-  console.log(users);
-  res.redirect('/urls');
+  };
+
+  if (doesEmailExist(req.body.email) === false){
+    var randomUserID = "user" + generateRandomString();
+    users[randomUserID] = {id: randomUserID, email: req.body.email, password: req.body.password};
+    res.cookie('user_id', users[randomUserID].id);
+    res.redirect('/urls');
+  } else if (doesEmailExist(req.body.email) === true){
+    res.sendStatus(404);
   }
 });
 
