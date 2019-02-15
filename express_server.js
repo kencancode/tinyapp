@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
 var cookieParser = require('cookie-parser');
-
+const bcrypt = require('bcrypt');
 
 app.use(cookieParser('A random phrase in order to create random signed cookies'));
 app.set("view engine", "ejs");
@@ -158,7 +158,9 @@ if (getUser(req.body.email)){
     res.send("User exists");
   } else if (getUser(req.body.email) === null){
     var randomUserID = "user" + generateRandomString();
-    users[randomUserID] = {id: randomUserID, email: req.body.email, password: req.body.password};
+    users[randomUserID] = {id: randomUserID,
+     email: req.body.email,
+     password:  bcrypt.hashSync(req.body.password, 10)};
     res.cookie('user_id', users[randomUserID].id);
     res.redirect('/urls');
   }
@@ -172,7 +174,8 @@ app.get("/login", (req, res) => {
 //login
 app.post("/login", (req, res) => {
    var user = getUser(req.body.email);
-   if (user && user.password === req.body.password){
+  if (user && bcrypt.compareSync(req.body.password, user.password)){
+   // if (user && user.password === req.body.password){
     res.cookie('user_id', user.id);
     res.redirect("/urls");
   } else {
