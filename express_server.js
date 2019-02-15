@@ -116,22 +116,30 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //    "/urls/313412" = go to each link and can update*******
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-  res.redirect('/urls');
+  if(req.cookies["user_id"] === urlDatabase[req.params.shortURL].userID ) {
+    urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+    res.redirect('/urls');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 
 //delete when buttons are clicked
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL]
-  let templateVars = { urls: urlDatabase, user_id: req.cookies["user_id"], user: users[req.cookies["user_id"]] };
-  res.render("urls_index", templateVars);
+  if (req.cookies["user_id"] === urlDatabase[req.params.shortURL].userID ){
+    delete urlDatabase[req.params.shortURL]
+    res.redirect('/urls');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 
 //    "/u/b3232"      = go to that website
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL]
+  var shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 
@@ -144,7 +152,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   if(!req.body.email || !req.body.password){
     res.send("Email and password must be provided");
-  };5
+  };
 
 if (getUser(req.body.email)){
     res.send("User exists");
