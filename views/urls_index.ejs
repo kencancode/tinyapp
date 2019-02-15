@@ -13,10 +13,11 @@
 <br/>
 <h1>My URLs</h1>
     <ul>
-      <% for(var path in urls){ %>
-        <li><%= path %>: <a href='<%= urls[path].longURL %>'><%= urls[path].longURL %></a>
-          <form method="POST" action="/urls/<%= path %>/delete">
-          <a href='/urls/<%= path %>/'>Edit     </a>
+      <% for(var shortURL in urls){ %>
+        <li><%= shortURL %>: <a href='<%= urls[shortURL] %>'> <%= urls[shortURL] %></a>
+
+          <form method="POST" action="/urls/<%= shortURL %>/delete">
+          <a href='/urls/<%= shortURL %>/'>Edit     </a>
           <button type="submit" class="btn btn-primary">Delete</button>
         </li>
         </form>

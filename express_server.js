@@ -13,7 +13,7 @@ function generateRandomString() {
 
 var urlDatabase = {
   "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "aJ48lW"},
-  "9sm5xK": {longURL: "http://www.google.com", userID: "aJ48lW" }
+  "9sm5xK": {longURL: "http://www.google.com", userID: "aJ48lW" },
 };
 
 const users = {
@@ -26,6 +26,11 @@ const users = {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk"
+  },
+  "b2xVn2": {
+    id: "b2xVn2",
+    email: "1@1.com",
+    password: "1"
   }
 }
 
@@ -37,6 +42,17 @@ function getUser(email){
   }
   return null;
 };
+
+function urlsForEachUser(user_id){
+    let obj = {};
+    for (var shortURL in urlDatabase){
+        if (urlDatabase[shortURL].userID === user_id) {
+            obj[shortURL] = urlDatabase[shortURL].longURL;
+        }
+    }
+    return obj;
+}
+
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -56,11 +72,13 @@ app.get("/hello", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, user_id: req.cookies["user_id"], user: users[req.cookies["user_id"]] };
+  var userUrls = urlsForEachUser(req.cookies['user_id']);
+  let templateVars = { urls: userUrls, user_id: req.cookies["user_id"], user: users[req.cookies["user_id"]] };
+
   if(users[req.cookies["user_id"]]){
-  res.render("urls_index", templateVars);
+    res.render("urls_index", templateVars);
   } else {
-  res.redirect("/login");
+    res.redirect("/login");
   }
 });
 
@@ -68,7 +86,7 @@ app.get("/urls", (req, res) => {
 app.post("/urls", (req, res) => {
   var randomURL = generateRandomString();
   console.log(req.body["longURL"]);
-  urlDatabase[randomURL] = req.body["longURL"]
+  urlDatabase[randomURL] =  {longURL: req.body["longURL"], userID: req.cookies["user_id"]}
   res.redirect("/urls");
 });
 
@@ -96,9 +114,9 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 });
 
-// //     "/urls/313412" = go to each link and can update*******
+//    "/urls/313412" = go to each link and can update*******
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect('/urls');
 });
 
@@ -126,7 +144,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   if(!req.body.email || !req.body.password){
     res.send("Email and password must be provided");
-  };
+  };5
 
 if (getUser(req.body.email)){
     res.send("User exists");
