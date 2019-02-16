@@ -11,11 +11,10 @@
 <% include ./partials/_header %>
 <br/>
 <body style="font-size:20px; padding:50px;">
-
     <%= shortURL %>: <a href='<%= longURL %>'><%= longURL %></a>
     <form method="POST" action="/urls/<%= shortURL %>/">
-    <input class="form-control" type="text" name="longURL" placeholder="Add your new long URL here" style="width: 300px; margin: 1em">
-    <button type="submit" class="btn btn-primary">Update</button>
+      <input class="form-control" type="text" name="longURL" placeholder="Add your new long URL here" style="width: 300px; margin: 1em">
+      <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </body>
 </html>
