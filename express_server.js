@@ -64,7 +64,11 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if(users[req.session.user_id]){
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls.json", (req, res) => {
@@ -84,7 +88,7 @@ app.get("/urls", (req, res) => {
   if(users[req.session.user_id]){
     res.render("urls_index", templateVars);
   } else {
-    res.redirect("/login");
+     res.send("<html><body>You must login first to view all urls! <a href='/login'>Log in</a></body></html>\n");
   }
 });
 
@@ -116,7 +120,7 @@ app.get("/urls/:shortURL", (req, res) => {
     if(users[req.session.user_id]){
     res.render("urls_show", templateVars);
   } else {
-    res.redirect("/login");
+    res.send("<html><body>You must login first to view or edit this url! <a href='/login'>Log in</a></body></html>\n");
   }
 });
 
@@ -196,7 +200,6 @@ app.post("/logout", (req, res) => {
   req.session = null
   res.redirect('/urls');
 });
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
