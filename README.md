@@ -11,4 +11,9 @@ I had the opportunity to:
 - Discover the concept of User Authentication by using bcrypt in this project.
 
 
-
+# Features
+- Users can create a new account or login
+- When logged in, users will see "Hi <first_name>" while navigating through different pages, thanks to cookies
+- After logging in, users can paste a long URL, which will be stored together with a short URL uniquely and automatically created in the backend
+- The URLs are privately visible only to users who create them, when they are loggedin 
+- Users can edit their URLS later
